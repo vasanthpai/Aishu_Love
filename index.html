@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Will You Be My Valentine 💘</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at bottom, #1b2735, #090a0f);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Stars */
+.star {
+    position: fixed;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite alternate;
+}
+@keyframes twinkle {
+    from { opacity: 0.3; }
+    to { opacity: 1; }
+}
+
+.card {
+    background: white;
+    color: #333;
+    padding: 40px;
+    border-radius: 22px;
+    text-align: center;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+    animation: fadeIn 1s ease;
+    z-index: 2;
+}
+
+h1 { color: #ff4d6d; }
+
+p {
+    font-size: 18px;
+    min-height: 50px;
+}
+
+button {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px;
+    transition: 0.3s;
+}
+button:hover { transform: scale(1.1); }
+
+#yesBtn { background: #ff4d6d; color: white; }
+#noBtn { background: #ddd; position: absolute; }
+
+.heartbeat { animation: heartbeat 1.2s infinite; }
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.05); }
+    40% { transform: scale(0.95); }
+    60% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+    from {opacity: 0; transform: scale(0.85);}
+    to {opacity: 1; transform: scale(1);}
+}
+
+/* Floating hearts */
+.heart {
+    position: fixed;
+    font-size: 20px;
+    pointer-events: none;
+    animation: floatUp 4s linear forwards;
+}
+@keyframes floatUp {
+    from { transform: translateY(0) scale(1); opacity: 1; }
+    to { transform: translateY(-200px) scale(1.8); opacity: 0; }
+}
+
+/* Panic NO */
+.shake {
+    animation: shake 0.3s infinite;
+}
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(6px); }
+    75% { transform: translateX(-6px); }
+    100% { transform: translateX(0); }
+}
+
+/* Confetti */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    animation: fall 3s linear forwards;
+}
+@keyframes fall {
+    from { transform: translateY(-10px) rotate(0deg); }
+    to { transform: translateY(110vh) rotate(360deg); }
+}
+
+/* Final photo */
+.final-photo {
+    width: 100%;
+    border-radius: 20px;
+    margin-top: 20px;
+    animation: photoReveal 2s ease forwards;
+    box-shadow: 0 0 50px rgba(255,77,109,0.7);
+}
+@keyframes photoReveal {
+    from { opacity: 0; transform: scale(0.6); }
+    to { opacity: 1; transform: scale(1); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <h1>💌 You’ve Got Mail</h1>
+    <p id="text"></p>
+    <div id="envelope" style="font-size:60px; cursor:pointer;">💌</div>
+    <p style="font-size:14px;">Tap to open</p>
+</div>
+
+<audio id="music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const herName = "Aishu 💕"; // ← change her name here
+const card = document.getElementById("card");
+const textEl = document.getElementById("text");
+const music = document.getElementById("music");
+
+/* Stars */
+for (let i = 0; i < 80; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.width = star.style.height = Math.random() * 2 + "px";
+    star.style.left = Math.random() * 100 + "vw";
+    star.style.top = Math.random() * 100 + "vh";
+    document.body.appendChild(star);
+}
+
+/* Floating hearts */
+document.addEventListener("click", e => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤️";
+    heart.style.left = e.clientX + "px";
+    heart.style.top = e.clientY + "px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 4000);
+});
+
+function typeText(el, text, speed = 45) {
+    el.innerHTML = "";
+    let i = 0;
+    const timer = setInterval(() => {
+        el.innerHTML += text.charAt(i);
+        i++;
+        if (i >= text.length) clearInterval(timer);
+    }, speed);
+}
+
+typeText(textEl, `Hey ${herName}… I made this just for you 💖`);
+
+document.getElementById("envelope").onclick = () => {
+    music.play().catch(()=>{});
+    q1();
+};
+
+function q1() {
+    card.innerHTML = `
+        <h1>Question 1 😌</h1>
+        <p id="text"></p>
+        <button id="yesBtn">Yes 💕</button>
+    `;
+    typeText(document.getElementById("text"),
+        "Do you know you’re my favorite person in the whole world?"
+    );
+    document.getElementById("yesBtn").onclick = q2;
+}
+
+function q2() {
+    card.innerHTML = `
+        <h1>Question 2 🥰</h1>
+        <p id="text"></p>
+        <button id="yesBtn">Of course 💖</button>
+    `;
+    typeText(document.getElementById("text"),
+        "Do you feel how much love I put into this?"
+    );
+    document.getElementById("yesBtn").onclick = finalQ;
+}
+
+function finalQ() {
+    card.innerHTML = `
+        <h1 class="heartbeat">One Last Question 💘</h1>
+        <p id="text"></p>
+        <button id="yesBtn">YES ❤️</button>
+        <button id="noBtn">No 🙃</button>
+    `;
+    typeText(document.getElementById("text"),
+        "Will you Marry me?"
+    );
+
+    if (navigator.vibrate) {
+        navigator.vibrate([200,100,200,100,400]);
+    }
+
+    const noBtn = document.getElementById("noBtn");
+    noBtn.onmouseover = () => {
+        noBtn.classList.add("shake");
+        noBtn.style.left = Math.random() * (window.innerWidth - 120) + "px";
+        noBtn.style.top = Math.random() * (window.innerHeight - 120) + "px";
+    };
+
+    document.getElementById("yesBtn").onclick = finalLove;
+}
+
+function finalLove() {
+    for (let i = 0; i < 120; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = Math.random() * 100 + "vw";
+        c.style.background = `hsl(${Math.random()*360},100%,50%)`;
+        c.style.animationDuration = Math.random() * 2 + 2 + "s";
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 3000);
+    }
+
+    card.innerHTML = `
+        <h1>I Love You baabu💞</h1>
+        <p>You chose me — and I’ll choose you every single day.</p>
+        <img class="final-photo" src="your-photo.jpg">
+    `;
+
+    setTimeout(() => {
+        const msg = document.createElement("p");
+        msg.innerHTML = "P.S. I can’t wait to spend forever with you 💍";
+        card.appendChild(msg);
+    }, 3000);
+}
+</script>
+
+</body>
+</html>
